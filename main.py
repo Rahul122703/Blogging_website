@@ -10,24 +10,27 @@ from werkzeug.security import generate_password_hash, check_password_hash
 from forms import CreatePostForm,RegisterForm,LoginForm,CommentForm
 import smtplib
 from flask_ckeditor import CKEditor
+import os
+
 
 logged_in = 0
 current_user_id = None
 on_blog = None
-my_email = "killbusyness@gmail.com"
-app_password = "yxoc btxv awdc mxle"
-
+my_email = "killbusyness@gmail.com" 
+app_password = "tnfj knqq kwft luzb" 
+print(app_password)
 app = Flask(__name__)
-app.config['SECRET_KEY'] = '8BYkEfBA6O6donzWlSihBXox7C0sKR6b'
-
+app.config['SECRET_KEY'] = "8BYkEfBA6O6donzWlSihBXox7C0sKR6b" 
+# '8BYkEfBA6O6donzWlSihBXox7C0sKR6b'
 Bootstrap5(app)
 ckeditor = CKEditor(app)
 class Base(DeclarativeBase):
     pass
 
-app.config['SQLALCHEMY_DATABASE_URI'] = r'sqlite:///G:\My Drive\WORK\MINE\Python\Blog website(MRPV)\instance\posts.db'
+app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get('DB_URI',"sqlite:///posts.db") #sensative
 db = SQLAlchemy(model_class=Base)
 db.init_app(app)
+# 'sqlite:///posts.db'
 
 login_manager = LoginManager()
 login_manager.init_app(app)
