@@ -98,8 +98,8 @@ def register():
             return redirect(url_for('get_all_posts'))
         else:
             error = "This account already exists, Please try another one"
-            return render_template('register.html',form = form_instance,error = error)
-    return render_template("register.html",form = form_instance)
+            return render_template('register.html',logged_in = logged_in,form = form_instance,error = error)
+    return render_template("register.html",logged_in = logged_in,form = form_instance)
 
 
 @app.route('/login', methods = ['POST','GET'])
@@ -121,8 +121,8 @@ def login():
                 return render_template('login.html',form = form_instance,error = error)
         else:
             error = "Account dosen't exists"
-            return render_template('login.html',form = form_instance,error = error)
-    return render_template("login.html",form = form_instance)
+            return render_template('login.html',logged_in = logged_in,form = form_instance,error = error)
+    return render_template("login.html",logged_in = logged_in,form = form_instance)
 
 @app.route('/')
 def get_all_posts():
@@ -157,7 +157,7 @@ def show_post(post_id):
         db.session.commit()
         return redirect(url_for('show_post',post_id = post_id))
     on_blog = True
-    return render_template("post.html", post=requested_post,comments = data, comment_form = comment_form_instance)
+    return render_template("post.html",logged_in = logged_in,current_id = current_user_id, post=requested_post,comments = data, comment_form = comment_form_instance)
 
 
 
@@ -177,7 +177,7 @@ def add_new_post():
         db.session.add(new_post)
         db.session.commit()
         return redirect(url_for("get_all_posts"))
-    return render_template("make-post.html", form=form)
+    return render_template("make-post.html",logged_in = logged_in, form=form)
 
 
 @app.route("/edit-post/<int:post_id>", methods=["GET", "POST"])
@@ -199,7 +199,7 @@ def edit_post(post_id):
         post.body = edit_form.body.data
         db.session.commit()
         return redirect(url_for("show_post", post_id=post.id))
-    return render_template("make-post.html", form=edit_form, is_edit=True)
+    return render_template("make-post.html",logged_in = logged_in, form=edit_form, is_edit=True)
 
 
 @app.route("/delete/<int:post_id>")
@@ -213,7 +213,7 @@ def delete_post(post_id):
 
 @app.route("/about")
 def about():
-    return render_template("about.html")
+    return render_template("about.html",logged_in = logged_in)
 
 
 @app.route("/contact",methods = ['POST','GET'])
@@ -228,7 +228,7 @@ def contact():
         smtp_connection.login(user=my_email, password=app_password)
         smtp_connection.sendmail(from_addr=email , to_addrs=my_email , msg=f"\nName: {name}\n\nEmail: {email}\n\nPhone: {number}\n\nMessage: {message}\n")
         smtp_connection.close()
-    return render_template("contact.html")
+    return render_template("contact.html",logged_in = logged_in)
 
 @app.route('/logout')
 def logout():
